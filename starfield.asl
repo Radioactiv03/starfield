@@ -19,8 +19,6 @@ init
 update
 {
 	vars.loading.Update(game);
-	//print(vars.ptr.ToString("X"));
-	print(vars.loading.Current.ToString());
 }
 
 isLoading
