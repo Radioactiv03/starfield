@@ -5,7 +5,7 @@ startup
 {
 	vars.watchers = new MemoryWatcherList();
 	
-    	//creates text components for quest counter and speedometer
+    //creates text components for quest counter and speedometer
 	vars.SetTextComponent = (Action<string, string>)((id, text) =>
 	{
 	        var textSettings = timer.Layout.Components.Where(x => x.GetType().Name == "TextComponent").Select(x => x.GetType().GetProperty("Settings").GetValue(x, null));
@@ -22,7 +22,7 @@ startup
 	
 	        if (textSetting != null)
 	        textSetting.GetType().GetProperty("Text2").SetValue(textSetting, text);
-    	});
+   	});
 	
 	
 	settings.Add("Speed", false, "Speedometer");
@@ -38,8 +38,9 @@ init
 	vars.LoadingPtr = scanner.Scan(new SigScanTarget(2, "89 ?? ????????33??C5??????????????4883????5B") { 
 	OnFound = (process, scanners, addr) => addr + 0x4 + process.ReadValue<int>(addr)
 	});
-
-
+	vars.PlayerCharacterPtr = scanner.Scan(new SigScanTarget(3, "4889??????????488B??????????488B??????????4885??74??0FB6") { 
+	OnFound = (process, scanners, addr) => addr + 0x4 + process.ReadValue<int>(addr)
+	});
 	vars.Playerptr = scanner.Scan(new SigScanTarget(4, "480F????????????488B????4C??????498B") { 
 	OnFound = (process, scanners, addr) => addr + 0x4 + process.ReadValue<int>(addr)
 	});
@@ -64,12 +65,12 @@ init
 	vars.Loading = new MemoryWatcher<int>(vars.LoadingPtr);
 	vars.IntroDone = new MemoryWatcher<bool>(vars.IntroDonePtr);
 	//These will probably change but until I find the ProcessHigh/PlayerCharacter it'll do	
-	vars.Speed = new MemoryWatcher<float>(new DeepPointer(vars.Playerptr,0xB0,0x0,0xF0,0x8,0x494));
-	vars.Cell =  new MemoryWatcher<int>(new DeepPointer(vars.Playerptr,0x460,0xE0,0x30));
+	vars.SpeedPtr = new MemoryWatcher<IntPtr>(new DeepPointer(vars.Playerptr,0x4F0));
+	vars.Cell =  new MemoryWatcher<int>(new DeepPointer(vars.PlayerCharacterPtr,0xE0,0x30));
 	vars.Quest = new MemoryWatcher<int>(new DeepPointer(vars.QuestPtr,0x2D0));
 	
 	vars.watchers.Add(vars.Loading);
-	vars.watchers.Add(vars.Speed);
+	vars.watchers.Add(vars.SpeedPtr);
 	vars.watchers.Add(vars.Cell);
 	vars.watchers.Add(vars.Quest);
 	vars.watchers.Add(vars.IntroDone);
@@ -78,11 +79,15 @@ init
 update
 {
 	vars.watchers.UpdateAll(game);
+	var xVel = game.ReadValue<float>((IntPtr)vars.SpeedPtr.Current+0xB0);
+	var yVel = game.ReadValue<float>((IntPtr)vars.SpeedPtr.Current+0xB4);
+	var zVel = game.ReadValue<float>((IntPtr)vars.SpeedPtr.Current+0xB8);
+	current.speed = Math.Sqrt(xVel * xVel + yVel * yVel);
 	if (settings["Speed"]) 
 	{
 		if(vars.Loading.Current == 1)//Avoid value flickering during load
 		{
-			vars.SetTextComponent("Speed:",vars.Speed.Current.ToString("000.0000"));
+			vars.SetTextComponent("Speed:",current.speed.ToString("000.0000"));
 		}
 	}
 	if (settings["Quest"]) 
