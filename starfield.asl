@@ -5,9 +5,9 @@ startup
 {
 	vars.watchers = new MemoryWatcherList();
 	
-    //creates text components for quest counter and speedometer
+    	//creates text components for quest counter and speedometer
 	vars.SetTextComponent = (Action<string, string>)((id, text) =>
-	{
+		{
 	        var textSettings = timer.Layout.Components.Where(x => x.GetType().Name == "TextComponent").Select(x => x.GetType().GetProperty("Settings").GetValue(x, null));
 	        var textSetting = textSettings.FirstOrDefault(x => (x.GetType().GetProperty("Text1").GetValue(x, null) as string) == id);
 	        if (textSetting == null)
@@ -22,12 +22,13 @@ startup
 	
 	        if (textSetting != null)
 	        textSetting.GetType().GetProperty("Text2").SetValue(textSetting, text);
-   	});
+    	});
 	
 	
 	settings.Add("Speed", false, "Speedometer");
 	settings.Add("Quest", false, "Quest Counter");
 	settings.Add("Cell", false, "Cell ID");
+	settings.Add("QuestSplitting", false, "Quest Splitting");
 	
 }
 
@@ -78,25 +79,30 @@ init
 
 update
 {
+	vars.split = false;
 	vars.watchers.UpdateAll(game);
 	var xVel = game.ReadValue<float>((IntPtr)vars.SpeedPtr.Current+0xB0);
 	var yVel = game.ReadValue<float>((IntPtr)vars.SpeedPtr.Current+0xB4);
 	var zVel = game.ReadValue<float>((IntPtr)vars.SpeedPtr.Current+0xB8);
 	current.speed = Math.Sqrt(xVel * xVel + yVel * yVel);
-	if (settings["Speed"]) 
+	if(settings["Speed"]) 
 	{
 		if(vars.Loading.Current == 1)//Avoid value flickering during load
 		{
 			vars.SetTextComponent("Speed:",current.speed.ToString("000.0000"));
 		}
 	}
-	if (settings["Quest"]) 
+	if(settings["Quest"]) 
 	{
 		vars.SetTextComponent("Quests:",vars.Quest.Current.ToString()); 
 	}
-	if (settings["Cell"]) 
+	if(settings["Cell"]) 
 	{
 		vars.SetTextComponent("Cell ID:", vars.Cell.Current.ToString("X")); 
+	}
+	if(settings["QuestSplitting"])
+	{
+		vars.split = vars.Quest.Current != vars.Quest.Old && vars.Quest.Current != 0 || vars.Quest.Old = 0;
 	}
 }
 
@@ -104,7 +110,10 @@ isLoading
 {
 	return vars.Loading.Current != 1 || !vars.IntroDone.Current;
 }
-
+split
+{
+	return vars.split;	
+}
 exit
 {
 	timer.IsGameTimePaused = true;
