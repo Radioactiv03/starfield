@@ -7,7 +7,7 @@ startup
 	
     	//creates text components for quest counter and speedometer
 	vars.SetTextComponent = (Action<string, string>)((id, text) =>
-		{
+	{
 	        var textSettings = timer.Layout.Components.Where(x => x.GetType().Name == "TextComponent").Select(x => x.GetType().GetProperty("Settings").GetValue(x, null));
 	        var textSetting = textSettings.FirstOrDefault(x => (x.GetType().GetProperty("Text1").GetValue(x, null) as string) == id);
 	        if (textSetting == null)
@@ -68,7 +68,7 @@ init
 	//These will probably change but until I find the ProcessHigh/PlayerCharacter it'll do	
 	vars.SpeedPtr = new MemoryWatcher<IntPtr>(new DeepPointer(vars.Playerptr,0x4F0));
 	vars.Cell =  new MemoryWatcher<int>(new DeepPointer(vars.PlayerCharacterPtr,0xE0,0x30));
-	vars.Quest = new MemoryWatcher<int>(new DeepPointer(vars.QuestPtr,0x2D0));
+	vars.Quest = new MemoryWatcher<int>(new DeepPointer(vars.QuestPtr,0x270));
 	
 	vars.watchers.Add(vars.Loading);
 	vars.watchers.Add(vars.SpeedPtr);
@@ -102,7 +102,7 @@ update
 	}
 	if(settings["QuestSplitting"])
 	{
-		vars.split = vars.Quest.Current != vars.Quest.Old && vars.Quest.Current != 0 || vars.Quest.Old != 0;
+		vars.split = vars.Quest.Current != vars.Quest.Old && (vars.Quest.Current != 0 && vars.Quest.Old != 0);
 	}
 }
 
