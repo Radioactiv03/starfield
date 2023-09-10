@@ -102,7 +102,7 @@ update
 	}
 	if(settings["QuestSplitting"])
 	{
-		vars.split = vars.Quest.Current != vars.Quest.Old;
+		vars.split = vars.Quest.Current != vars.Quest.Old && vars.Loading.Current == 1;
 	}
 }
 
