@@ -87,10 +87,7 @@ update
 	current.speed = Math.Sqrt(xVel * xVel + yVel * yVel);
 	if(settings["Speed"]) 
 	{
-		if(vars.Loading.Current == 1)//Avoid value flickering during load
-		{
-			vars.SetTextComponent("Speed:",current.speed.ToString("000.0000"));
-		}
+		vars.SetTextComponent("Speed:",current.speed.ToString("000.0000"));
 	}
 	if(settings["Quest"]) 
 	{
