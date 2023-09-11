@@ -29,6 +29,7 @@ startup
 	settings.Add("Quest", false, "Quest Counter");
 	settings.Add("Cell", false, "Cell ID");
 	settings.Add("QuestSplitting", false, "Quest Splitting");
+	settings.Add("AutoStart", false, "Auto Start");
 	
 }
 
@@ -47,7 +48,7 @@ init
 	});
 	
 	//Quest Completed is not stored within the PlayerCharacter as it is a "MiscStat"
-	vars.QuestPtr = scanner.Scan(new SigScanTarget(3, "4803??????????BA????????4885") { 
+	vars.MiscStat = scanner.Scan(new SigScanTarget(3, "4803??????????BA????????4885") { 
 	OnFound = (process, scanners, addr) => addr + 0x4 + process.ReadValue<int>(addr)
 	});
 	
@@ -68,7 +69,7 @@ init
 	//These will probably change but until I find the ProcessHigh/PlayerCharacter it'll do	
 	vars.SpeedPtr = new MemoryWatcher<IntPtr>(new DeepPointer(vars.Playerptr,0x4F0));
 	vars.Cell =  new MemoryWatcher<int>(new DeepPointer(vars.PlayerCharacterPtr,0xE0,0x30));
-	vars.Quest = new MemoryWatcher<int>(new DeepPointer(vars.QuestPtr,0x270));
+	vars.Quest = new MemoryWatcher<int>(new DeepPointer(vars.MiscStat,0x270));
 	
 	vars.watchers.Add(vars.Loading);
 	vars.watchers.Add(vars.SpeedPtr);
@@ -102,7 +103,14 @@ update
 		vars.split = vars.Quest.Current != vars.Quest.Old && vars.Loading.Current == 1;
 	}
 }
-
+start
+{
+	if(settings["AutoStart"])
+	{
+		return vars.Quest.Current == 0 && vars.Cell.Current.ToString("X") == "1054C";
+		timer.IsGameTimePaused = true;
+	}
+}
 isLoading
 {
 	return vars.Loading.Current != 1 || !vars.IntroDone.Current;
