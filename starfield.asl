@@ -24,13 +24,25 @@ startup
 	        textSetting.GetType().GetProperty("Text2").SetValue(textSetting, text);
     	});
 	
-	
-	settings.Add("Speed", false, "Speedometer");
-	settings.Add("Quest", false, "Quest Counter");
-	settings.Add("Cell", false, "Cell ID");
-	settings.Add("QuestSplitting", false, "Quest Splitting");
-	settings.Add("AutoStart", false, "Auto Start");
-	
+
+	settings.Add("QuestSplitting", true, "Quest Splitting");
+	settings.Add("AutoStart", true, "Auto Start");
+
+	//Parent setting
+	settings.Add("Variable Information", false, "Variable Information");
+	//Child settings that will sit beneath Parent setting
+	settings.Add("Speed", false, "Speedometer", "Variable Information");
+	settings.Add("Quest", false, "Quest Counter", "Variable Information");
+	settings.Add("Cell", false, "Cell ID", "Variable Information");
+
+	//Parent setting
+	settings.Add("Extra Splits", false, "Extra Splits");
+	//Child settings that will sit beneath Parent setting
+	settings.Add("OSS Artifact", false, "OSS Artifact", "Extra Splits");
+	settings.Add("Meet Barrett", false, "Meet Barrett", "Extra Splits");
+	settings.Add("Starship Training", false, "Starship Training", "Extra Splits");
+	settings.Add("Kreet Research Lab", false, "Kreet Research Lab (splits when you get out of ship in NA)", "Extra Splits");
+	settings.Add("Vendor Slip Clip", false, "Vendor Slip Clip", "Extra Splits");
 }
 
 init
@@ -117,11 +129,33 @@ isLoading
 }
 split
 {
-	return vars.split;	
+	return vars.split;
+
+    if (settings["OSS Artifact"] && vars.Cell.Old.ToString("X") == "1054C" && vars.Cell.Current.ToString("X") == "1ED6FD" && vars.Quest.Current == 0)
+    {
+        return true;
+    }
+
+	if (settings["Meet Barrett"] && vars.Cell.Old.ToString("X") == "1ED6FD" && vars.Cell.Current.ToString("X") == "1100136" && vars.Quest.Current == 0)
+    {
+        return true;
+    }
+
+	if (settings["Starship Training"] && vars.Cell.Old.ToString("X") == "1100136" && vars.Cell.Current.ToString("X") == "32587C" && vars.Quest.Current == 0)
+    {
+        return true;
+    }
+	if (settings["Kreet Research Lab"] && vars.Cell.Old.ToString("X") == "1100136" && vars.Cell.Current.ToString("X") == "125AC" && vars.Quest.Current == 0)
+    {
+        return true;
+    }
+	if (settings["Vendor Slip Clip"] && vars.Cell.Old.ToString("X") == "14CB3" && vars.Cell.Current.ToString("X") == "14CB2" && vars.Quest.Current == 0)
+    {
+        return true;
+    }			
 }
 exit
 {
 	timer.IsGameTimePaused = true;
 }
-
 
