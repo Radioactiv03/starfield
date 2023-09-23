@@ -1,4 +1,7 @@
-state("starfield"){}
+state("starfield"){
+
+
+}
 
 
 startup
@@ -34,6 +37,7 @@ startup
 	settings.Add("Speed", false, "Speedometer", "Variable Information");
 	settings.Add("Quest", false, "Quest Counter", "Variable Information");
 	settings.Add("Cell", false, "Cell ID", "Variable Information");
+	settings.Add("Last Updated Quest", false, "Last Updated Quest", "Variable Information");
 
 	//Parent setting
 	settings.Add("Extra Splits", false, "Extra Splits");
@@ -82,12 +86,15 @@ init
 	vars.SpeedPtr = new MemoryWatcher<IntPtr>(new DeepPointer(vars.Playerptr,0x4F0));
 	vars.Cell =  new MemoryWatcher<int>(new DeepPointer(vars.PlayerCharacterPtr,0xE0,0x30));
 	vars.Quest = new MemoryWatcher<int>(new DeepPointer(vars.MiscStat,0x270));
+	vars.lastUpdatedQuest = new StringWatcher(new DeepPointer(vars.PlayerCharacterPtr,0x880, 0x38, 0x48, 0x18),50);
+	
 	
 	vars.watchers.Add(vars.Loading);
 	vars.watchers.Add(vars.SpeedPtr);
 	vars.watchers.Add(vars.Cell);
 	vars.watchers.Add(vars.Quest);
 	vars.watchers.Add(vars.IntroDone);
+	vars.watchers.Add(vars.lastUpdatedQuest);
 }
 
 update
@@ -110,10 +117,16 @@ update
 	{
 		vars.SetTextComponent("Cell ID:", vars.Cell.Current.ToString("X")); 
 	}
+	if(settings["Last Updated Quest"])
+	{
+		vars.SetTextComponent("Last Updated Quest:", vars.lastUpdatedQuest.Current);
+	}
 	if(settings["QuestSplitting"])
 	{
 		vars.split = vars.Quest.Current != vars.Quest.Old && vars.Loading.Current == 1;
 	}
+
+
 }
 start
 {
@@ -158,4 +171,3 @@ exit
 {
 	timer.IsGameTimePaused = true;
 }
-
