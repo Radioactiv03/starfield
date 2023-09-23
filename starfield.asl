@@ -1,9 +1,4 @@
-state("starfield"){
-
-
-}
-
-
+state("starfield"){}
 startup
 {
 	vars.watchers = new MemoryWatcherList();
