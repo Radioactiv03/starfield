@@ -137,30 +137,30 @@ isLoading
 }
 split
 {
-	return vars.split;
-
-    if (settings["OSS Artifact"] && vars.Cell.Old.ToString("X") == "1054C" && vars.Cell.Current.ToString("X") == "1ED6FD" && vars.Quest.Current == 0)
-    {
-        return true;
-    }
-
+	
+	if (settings["OSS Artifact"] && vars.Cell.Old.ToString("X") == "1054C" && vars.Cell.Current.ToString("X") == "1ED6FD" && vars.Quest.Current == 0)
+	{
+		return true;
+	}
+	
 	if (settings["Meet Barrett"] && vars.Cell.Old.ToString("X") == "1ED6FD" && vars.Cell.Current.ToString("X") == "1100136" && vars.Quest.Current == 0)
-    {
-        return true;
-    }
-
+	{
+		return true;
+	}
+	
 	if (settings["Starship Training"] && vars.Cell.Old.ToString("X") == "1100136" && vars.Cell.Current.ToString("X") == "32587C" && vars.Quest.Current == 0)
-    {
-        return true;
-    }
+	{
+		return true;
+	}
 	if (settings["Kreet Research Lab"] && vars.Cell.Old.ToString("X") == "1100136" && vars.Cell.Current.ToString("X") == "125AC" && vars.Quest.Current == 0)
-    {
-        return true;
-    }
+	{
+		return true;
+	}
 	if (settings["Vendor Slip Clip"] && vars.Cell.Old.ToString("X") == "14CB3" && vars.Cell.Current.ToString("X") == "14CB2" && vars.Quest.Current == 0)
-    {
-        return true;
-    }			
+	{
+		return true;
+	}	
+	return vars.split;
 }
 exit
 {
