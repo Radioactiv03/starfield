@@ -143,7 +143,7 @@ split
 		return true;
 	}
 	
-	if (settings["Meet Barrett"] && vars.Cell.Old.ToString("X") == "1ED6FD" && vars.Cell.Current.ToString("X") == "1100136" && vars.Quest.Current == 0)
+	if (settings["Meet Barrett"] && vars.Cell.Old.ToString("X") == "1ED709" && vars.Cell.Current.ToString("X") == "1100136" && vars.Quest.Current == 0)
 	{
 		return true;
 	}
@@ -152,7 +152,7 @@ split
 	{
 		return true;
 	}
-	if (settings["Kreet Research Lab"] && vars.Cell.Old.ToString("X") == "1100136" && vars.Cell.Current.ToString("X") == "125AC" && vars.Quest.Current == 0)
+	if (settings["Kreet Research Lab"] && vars.Cell.Old.ToString("X") == "1100136" && vars.Cell.Current.ToString("X") == "325870" && vars.Quest.Current == 0)
 	{
 		return true;
 	}
