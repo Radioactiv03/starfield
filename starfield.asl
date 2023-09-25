@@ -148,11 +148,11 @@ split
 		return true;
 	}
 	
-	if (settings["Starship Training"] && vars.Cell.Old.ToString("X") == "1100136" && vars.Cell.Current.ToString("X") == "32587C" && vars.Quest.Current == 0)
+	if (settings["Starship Training"] && vars.Cell.Old.ToString("X") == "1100136" && vars.Cell.Current.ToString("X") == "325870" && vars.Quest.Current == 0)
 	{
 		return true;
 	}
-	if (settings["Kreet Research Lab"] && vars.Cell.Old.ToString("X") == "1100136" && vars.Cell.Current.ToString("X") == "325870" && vars.Quest.Current == 0)
+	if (settings["Kreet Research Lab"] && vars.Cell.Old.ToString("X") == "1100136" && vars.Cell.Current.ToString("X") == "125AC" && vars.Quest.Current == 0)
 	{
 		return true;
 	}
