@@ -81,6 +81,7 @@ init
 	vars.SpeedPtr = new MemoryWatcher<IntPtr>(new DeepPointer(vars.Playerptr,0x4F0));
 	vars.Cell =  new MemoryWatcher<int>(new DeepPointer(vars.PlayerCharacterPtr,0xE0,0x30));
 	vars.Quest = new MemoryWatcher<int>(new DeepPointer(vars.MiscStat,0x270));
+	//TESQuest 0x880 : ~Info is 0x38 : Id is 0x30
 	vars.lastUpdatedQuest = new StringWatcher(new DeepPointer(vars.PlayerCharacterPtr,0x880, 0x38, 0x48, 0x18),50);
 	
 	
