@@ -132,8 +132,8 @@ start
 {
 	if(settings["AutoStart"])
 	{
-		return vars.Quest.Current == 0 && vars.Cell.Current.ToString("X") == "1054C";
 		timer.IsGameTimePaused = true;
+		return vars.Quest.Current == 0 && vars.Cell.Current.ToString("X") == "1054C";
 	}
 }
 isLoading
