@@ -37,10 +37,8 @@ startup
 	settings.Add("Extra Splits", false, "Extra Splits");
 	//Child settings that will sit beneath Parent setting
 	settings.Add("OSS Artifact", false, "OSS Artifact", "Extra Splits");
-	settings.Add("Meet Barrett", false, "Meet Barrett", "Extra Splits");
-	settings.Add("Starship Training", false, "Starship Training", "Extra Splits");
-	settings.Add("Kreet Research Lab", false, "Kreet Research Lab (splits when you get out of ship in NA)", "Extra Splits");
-	settings.Add("Vendor Slip Clip", false, "Vendor Slip Clip", "Extra Splits");
+	settings.Add("Enter Ship", false, "Enter Ship", "Extra Splits");
+	settings.Add("New Atlantis", false, "New Atlantis", "Extra Splits");
 }
 
 init
@@ -149,24 +147,14 @@ split
 	{
 		return true;
 	}
-	
-	if(settings["Meet Barrett"] && vars.Cell.Old.ToString("X") == "1ED709" && vars.Cell.Current.ToString("X") == "1100136" && vars.Quest.Current == 0)
+	if(settings["Enter Ship"] && vars.Cell.Old.ToString("X") == "1ED709" && vars.Cell.Current.ToString("X") == "1100136" && vars.Quest.Current == 0)
 	{
 		return true;
 	}
-	
-	if(settings["Starship Training"] && vars.Cell.Old.ToString("X") == "1100136" && vars.Cell.Current.ToString("X") == "325870" && vars.Quest.Current == 0)
+	if(settings["New Atlantis"] && vars.Cell.Old.ToString("X") == "1100136" && vars.Cell.Current.ToString("X") == "125AC" && vars.Quest.Current == 0)
 	{
 		return true;
 	}
-	if(settings["Kreet Research Lab"] && vars.Cell.Old.ToString("X") == "1100136" && vars.Cell.Current.ToString("X") == "125AC" && vars.Quest.Current == 0)
-	{
-		return true;
-	}
-	if(settings["Vendor Slip Clip"] && vars.Cell.Old.ToString("X") == "14CB3" && vars.Cell.Current.ToString("X") == "14CB2" && vars.Quest.Current == 0)
-	{
-		return true;
-	}	
 	return vars.split;
 }
 exit
