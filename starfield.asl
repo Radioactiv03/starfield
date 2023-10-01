@@ -25,7 +25,6 @@ startup
 
 	settings.Add("QuestSplitting", true, "Quest Splitting");
 	settings.Add("AutoStart", true, "Auto Start");
-
 	//Parent setting
 	settings.Add("Variable Information", false, "Variable Information");
 	//Child settings that will sit beneath Parent setting
@@ -66,7 +65,12 @@ init
 	vars.IntroDonePtr = scanner.Scan(new SigScanTarget(3, "4889??????????89??????????488D??????????4889??????????E8????????488D??????????E8????????488D??????????4883????C34889??????5553") { 
 	OnFound = (process, scanners, addr) => addr + 0x4 + process.ReadValue<int>(addr)
 	});
-	
+	/*
+	vars.PlayerControlsPtr = scanner.Scan(new SigScanTarget(3, "4C????????????4489??????????C5??????C5??????????????4C????????????4C????????????488B??????????4881??????????488D??????????E8????????4889??????????4C????????????75??488D??????????E8") { 
+	OnFound = (process, scanners, addr) => addr + 0x4 + process.ReadValue<int>(addr)
+	});
+	*/
+
 	
 	if (vars.LoadingPtr == IntPtr.Zero || vars.Playerptr == IntPtr.Zero)
 	{
@@ -83,7 +87,8 @@ init
 	vars.Quest = new MemoryWatcher<int>(new DeepPointer(vars.MiscStat,0x270));
 	//TESQuest 0x880 : ~Info is 0x38 : Id is 0x30
 	vars.lastUpdatedQuest = new StringWatcher(new DeepPointer(vars.PlayerCharacterPtr,0x880, 0x38, 0x48, 0x18),50);
-	
+	//Incase we need to track PlayerControls
+	//vars.PlayerControls = new MemoryWatcher<int>(new DeepPointer(vars.PlayerControlsPtr,0x168));
 	
 	vars.watchers.Add(vars.Loading);
 	vars.watchers.Add(vars.SpeedPtr);
@@ -91,6 +96,7 @@ init
 	vars.watchers.Add(vars.Quest);
 	vars.watchers.Add(vars.IntroDone);
 	vars.watchers.Add(vars.lastUpdatedQuest);
+	//vars.watchers.Add(vars.PlayerControls);
 }
 
 update
@@ -139,25 +145,25 @@ isLoading
 split
 {
 	
-	if (settings["OSS Artifact"] && vars.Cell.Old.ToString("X") == "1054C" && vars.Cell.Current.ToString("X") == "1ED6FD" && vars.Quest.Current == 0)
+	if(settings["OSS Artifact"] && vars.Cell.Old.ToString("X") == "1054C" && vars.Cell.Current.ToString("X") == "1ED6FD" && vars.Quest.Current == 0)
 	{
 		return true;
 	}
 	
-	if (settings["Meet Barrett"] && vars.Cell.Old.ToString("X") == "1ED709" && vars.Cell.Current.ToString("X") == "1100136" && vars.Quest.Current == 0)
+	if(settings["Meet Barrett"] && vars.Cell.Old.ToString("X") == "1ED709" && vars.Cell.Current.ToString("X") == "1100136" && vars.Quest.Current == 0)
 	{
 		return true;
 	}
 	
-	if (settings["Starship Training"] && vars.Cell.Old.ToString("X") == "1100136" && vars.Cell.Current.ToString("X") == "325870" && vars.Quest.Current == 0)
+	if(settings["Starship Training"] && vars.Cell.Old.ToString("X") == "1100136" && vars.Cell.Current.ToString("X") == "325870" && vars.Quest.Current == 0)
 	{
 		return true;
 	}
-	if (settings["Kreet Research Lab"] && vars.Cell.Old.ToString("X") == "1100136" && vars.Cell.Current.ToString("X") == "125AC" && vars.Quest.Current == 0)
+	if(settings["Kreet Research Lab"] && vars.Cell.Old.ToString("X") == "1100136" && vars.Cell.Current.ToString("X") == "125AC" && vars.Quest.Current == 0)
 	{
 		return true;
 	}
-	if (settings["Vendor Slip Clip"] && vars.Cell.Old.ToString("X") == "14CB3" && vars.Cell.Current.ToString("X") == "14CB2" && vars.Quest.Current == 0)
+	if(settings["Vendor Slip Clip"] && vars.Cell.Old.ToString("X") == "14CB3" && vars.Cell.Current.ToString("X") == "14CB2" && vars.Quest.Current == 0)
 	{
 		return true;
 	}	
