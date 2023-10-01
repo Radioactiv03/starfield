@@ -123,7 +123,7 @@ update
 	}
 	if(settings["QuestSplitting"])
 	{
-		vars.split = vars.Quest.Current != vars.Quest.Old && vars.Loading.Current == 1;
+		vars.split = vars.Quest.Current != vars.Quest.Old && vars.Loading.Current == 1 && (vars.lastUpdatedQuest != "Final Glimpses" || vars.lastUpdatedQuest != "Failure to Communicate" );
 	}
 
 
