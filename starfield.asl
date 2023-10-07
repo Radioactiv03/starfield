@@ -80,7 +80,7 @@ init
 	vars.Loading = new MemoryWatcher<int>(vars.LoadingPtr);
 	vars.IntroDone = new MemoryWatcher<bool>(vars.IntroDonePtr);
 	//These will probably change but until I find the ProcessHigh/PlayerCharacter it'll do	
-	vars.SpeedPtr = new MemoryWatcher<IntPtr>(new DeepPointer(vars.Playerptr,0x4F0));
+	vars.SpeedPtr = new MemoryWatcher<float>(new DeepPointer(vars.PlayerCharacterPtr,0x260,0x8,0x498));
 	vars.Cell =  new MemoryWatcher<int>(new DeepPointer(vars.PlayerCharacterPtr,0xE0,0x30));
 	vars.Quest = new MemoryWatcher<int>(new DeepPointer(vars.MiscStat,0x270));
 	//TESQuest 0x880 : ~Info is 0x38 : Id is 0x30
@@ -96,18 +96,13 @@ init
 	vars.watchers.Add(vars.lastUpdatedQuest);
 	//vars.watchers.Add(vars.PlayerControls);
 }
-
 update
 {
 	vars.split = false;
 	vars.watchers.UpdateAll(game);
-	var xVel = game.ReadValue<float>((IntPtr)vars.SpeedPtr.Current+0xB0);
-	var yVel = game.ReadValue<float>((IntPtr)vars.SpeedPtr.Current+0xB4);
-	var zVel = game.ReadValue<float>((IntPtr)vars.SpeedPtr.Current+0xB8);
-	current.speed = Math.Sqrt(xVel * xVel + yVel * yVel);
 	if(settings["Speed"]) 
 	{
-		vars.SetTextComponent("Speed:",current.speed.ToString("000.0000"));
+		vars.SetTextComponent("Speed:",vars.SpeedPtr.Current.ToString("000.0000"));
 	}
 	if(settings["Quest"]) 
 	{
