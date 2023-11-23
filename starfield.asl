@@ -48,6 +48,7 @@ init
 	vars.LoadingPtr = scanner.Scan(new SigScanTarget(2, "89 ?? ????????33??C5??????????????4883????5B") { 
 	OnFound = (process, scanners, addr) => addr + 0x4 + process.ReadValue<int>(addr)
 	});
+	
 	vars.PlayerCharacterPtr = scanner.Scan(new SigScanTarget(3, "4889??????????488B??????????488B??????????4885??74??0FB6") { 
 	OnFound = (process, scanners, addr) => addr + 0x4 + process.ReadValue<int>(addr)
 	});
@@ -69,17 +70,9 @@ init
 	vars.bhkCharProxyController = scanner.Scan(new SigScanTarget(4, "480F????????????488B????4C??????498B") { 
 	OnFound = (process, scanners, addr) => addr + 0x4 + process.ReadValue<int>(addr)
 	});
-	
 	*/
-
-	
-	if (vars.LoadingPtr == IntPtr.Zero)
-	{
-        	throw new Exception("Game engine not initialized - retrying");
-	}
-	
-	
-	
+		
+	//All these are pre 1.8
 	vars.Loading = new MemoryWatcher<int>(vars.LoadingPtr);
 	vars.IntroDone = new MemoryWatcher<bool>(vars.IntroDonePtr);
 	//Uses the PlayerCharacter and goes through bhkCharProxyController
@@ -92,6 +85,23 @@ init
 	//Incase we need to track PlayerControls
 	//vars.PlayerControls = new MemoryWatcher<int>(new DeepPointer(vars.PlayerControlsPtr,0x168));
 	
+	version = modules.First().FileVersionInfo.ProductVersion;
+	//Should probably find a better way to do this
+	if(Char.GetNumericValue(version[2]) >= 8)
+	{
+		vars.PlayerCharacterPtr = scanner.Scan(new SigScanTarget(3, "488B??????????4885??0F84????????83??????0F84????????488D") { 
+		OnFound = (process, scanners, addr) => addr + 0x4 + process.ReadValue<int>(addr)
+		});
+		vars.SpeedPtr = new MemoryWatcher<float>(new DeepPointer(vars.PlayerCharacterPtr,0x240,0x8,0x498));
+		vars.Cell =  new MemoryWatcher<int>(new DeepPointer(vars.PlayerCharacterPtr,0xC0,0x28));
+		vars.lastUpdatedQuest = new StringWatcher(new DeepPointer(vars.PlayerCharacterPtr,0x860, 0x38, 0x40, 0x18),50);	
+	}
+	if (vars.LoadingPtr == IntPtr.Zero)
+	{
+        	throw new Exception("Game engine not initialized - retrying");
+	}
+	
+
 	vars.watchers.Add(vars.Loading);
 	vars.watchers.Add(vars.SpeedPtr);
 	vars.watchers.Add(vars.Cell);
@@ -99,6 +109,7 @@ init
 	vars.watchers.Add(vars.IntroDone);
 	vars.watchers.Add(vars.lastUpdatedQuest);
 	//vars.watchers.Add(vars.PlayerControls);
+	
 }
 update
 {
